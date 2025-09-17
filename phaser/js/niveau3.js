@@ -221,23 +221,23 @@ export default class niveau3 extends Phaser.Scene {
     }
   }
   // gestion des collisions balle/joueur
-  hitPlayer(bullet, player) {
+  hitPlayer(player, bullet) {
     // ne pas se blesser avec ses propres balles, mais accepter les balles des cibles
     if (bullet.origin === 'player') return;
 
-    // Appliquer dégât
-  player.pv--;
-  if (player.pv < 0) player.pv = 0;
-  // Mettre à jour l'affichage
-  if (this.playerPvText) this.playerPvText.setText(`PV: ${player.pv}`);
-  // Destruction de la balle
-  if (bullet.active) bullet.destroy();
-  // Si PV à 0 on peut gérer la mort (ici on switch vers la sélection)
-  if (player.pv <= 0) {
-    console.log('Joueur mort - retour au menu de sélection');
-    this.scene.switch('selection');
+      // Appliquer dégât
+    player.pv--;
+    if (player.pv < 0) player.pv = 0;
+    // Mettre à jour l'affichage
+    if (this.playerPvText) this.playerPvText.setText(`PV: ${player.pv}`);
+    // Destruction de la balle
+    if (bullet.active) bullet.destroy();
+    // Si PV à 0 on peut gérer la mort (ici on switch vers la sélection)
+    if (player.pv <= 0) {
+      console.log('Joueur mort - retour au menu de sélection');
+      this.scene.switch('selection');
+    }
   }
-}
 
 
 

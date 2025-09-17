@@ -169,6 +169,22 @@ export default class selection extends Phaser.Scene {
         this.scene.pause("selection");
       }
     });
+
+    //==========================================
+    // clé
+    //==========================================
+    this.keyItem = this.physics.add.sprite(300, 500, "img_key");
+    this.keyItem.setInteractive();
+    this.keyItem.setData("type", "clé"); // Ou autre propriété utile
+
+    // Rendu physique statique s’il ne doit pas bouger
+    this.keyItem.body.setAllowGravity(false);
+    this.keyItem.body.setImmovable(true);
+
+    // Optionnel : overlap pour détection proximité joueur
+    this.physics.add.overlap(player, this.keyItem, () => {
+      // Affiche un texte ou icône "Appuyez sur E pour ramasser"
+    }, null, this);
   }
 
   /***********************************************************************/
@@ -209,16 +225,26 @@ export default class selection extends Phaser.Scene {
     } else {
       player.setVelocityY(0);
     }
-
-    if (Phaser.Input.Keyboard.JustDown(clavier.E) == true) {
-      if (this.physics.overlap(player, this.porte1))
-        this.scene.switch("niveau1");
-      if (this.physics.overlap(player, this.porte2))
-        this.scene.switch("niveau2");
-      if (this.physics.overlap(player, this.porte3))
-        this.scene.switch("niveau3");
+if (Phaser.Input.Keyboard.JustDown(clavier.E)) {
+  if (this.physics.overlap(player, this.keyItem)) {
+    const inventoryScene = this.scene.get("Inventory");
+    if (inventoryScene.addItem(this.keyItem.getData("type"))) {
+      this.keyItem.destroy();
+      console.log("Objet ramassé et ajouté à l’inventaire");
+    } else {
+      console.log("Inventaire plein !");
     }
   }
+
+  // Toujours ta gestion portes
+  if (this.physics.overlap(player, this.porte1))
+    this.scene.switch("niveau1");
+  if (this.physics.overlap(player, this.porte2))
+    this.scene.switch("niveau2");
+  if (this.physics.overlap(player, this.porte3))
+    this.scene.switch("niveau3");
+}
+}
 }
 
 /***********************************************************************/
